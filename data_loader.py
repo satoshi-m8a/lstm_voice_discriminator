@@ -20,11 +20,11 @@ class DataLoader(object):
         data = []
         dirs = [f for f in os.listdir(self.data_dir) if f.startswith('dr')]
 
-        for dir in dirs:
-            dd = np.array(self.load_wav_set(dir))
-            for d in dd:
-                for x in d:
-                    if 'dr2-faem0' in dir:
+        for d in dirs:
+            sets = np.array(self.load_wav_set(d))
+            for s in sets:
+                for x in s:
+                    if 'dr2-faem0' in d:
                         y = np.ones(x.shape)
                     else:
                         y = np.zeros(x.shape)
