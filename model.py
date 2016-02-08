@@ -31,7 +31,7 @@ class Model(object):
         outputs, states = seq2seq.rnn_decoder(inputs, self.initial_state, cell, scope='rnnvm')
 
         output = tf.reshape(tf.concat(1, outputs), [-1, size])
-        output = tf.nn.xw_plus_b(output, output_w, output_b)
+        output = tf.sigmoid(tf.nn.xw_plus_b(output, output_w, output_b))
 
         diff = tf.sub(output, tf.reshape(self.target_data, shape=[num_steps * batch_size, 1]))
 
