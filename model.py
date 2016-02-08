@@ -31,13 +31,13 @@ class Model(object):
         outputs, states = seq2seq.rnn_decoder(inputs, self.initial_state, cell, scope='rnnvm')
 
         output = tf.reshape(tf.concat(1, outputs), [-1, size])
-        output = tf.sigmoid(tf.nn.xw_plus_b(output, output_w, output_b))
+        output = tf.nn.xw_plus_b(output, output_w, output_b)
 
-        diff = tf.sub(output, tf.reshape(self.target_data, shape=[num_steps * batch_size, 1]))
+        entropy = tf.nn.sigmoid_cross_entropy_with_logits(
+                output,
+                tf.reshape(self.target_data, shape=[num_steps * batch_size, 1]))
 
-        loss = tf.nn.l2_loss(diff)
-
-        self.cost = cost = loss / (batch_size * num_steps)
+        self.cost = cost = tf.reduce_mean(entropy)
         self.final_state = states[-1]
 
         if not is_training:
